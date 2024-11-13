@@ -3,7 +3,7 @@
 
 # If development version is wanted
 # install.packages("devtools")
-# devtools::install_github("MikkelVembye/AIscreenR")
+devtools::install_github("MikkelVembye/AIscreenR")
 
 # Load relevant package
 
@@ -28,24 +28,19 @@ setwd("C:/Users/B199526/Desktop/GitHub repos/SRMA-SIG-presentation")
 ris_dat_excl <- revtools::read_bibliography("friends_excl.ris") |> 
   suppressWarnings()
 
-set.seed(20241115)
+set.seed(20241113)
 
 # Sample 100 irrelevant reference for the the test data
 excluded_sample <- 
   ris_dat_excl |> 
   as_tibble() |>
-  # Selecting relevant variables only
-  select(author, eppi_id, title, abstract) |>
+  select(author, eppi_id, title, abstract) |>            # Selecting relevant variables only
   mutate(
-    # Track human decision
-    human_code = 0, 
-    # Handle missing titles and abstracts
-    across(c(author, title, abstract), ~ na_if(., "NA")) 
+    human_code = 0,                                      # Track human decision
+    across(c(author, title, abstract), ~ na_if(., "NA")) # Handle missing titles and abstracts
   ) |> 
-  # Remove references with no abstract
-  dplyr::filter(!is.na(abstract)) |> 
-  # Sample references 
-  AIscreenR::sample_references(n = 100) 
+  dplyr::filter(!is.na(abstract)) |>                     # Remove references with no abstract
+  AIscreenR::sample_references(n = 100)                  # Sample references 
 
 View(excluded_sample)
 
@@ -57,18 +52,13 @@ ris_dat_incl <- revtools::read_bibliography("friends_incl.ris") |>
 included_sample <- 
   ris_dat_incl |> 
   as_tibble() |>
-  # Selecting relevant variables only
-  select(author, eppi_id, title, abstract) |>
+  select(author, eppi_id, title, abstract) |>            # Selecting relevant variables only
   mutate(
-    # Track human decision
-    human_code = 1, 
-    # Handle missing titles and abstracts
-    across(c(author, title, abstract), ~ na_if(., "NA")) 
+    human_code = 1,                                      # Track human decision
+    across(c(author, title, abstract), ~ na_if(., "NA")) # Handle missing titles and abstracts
   ) |> 
-  # Remove references with no abstract
-  dplyr::filter(!is.na(abstract)) |> 
-  # Sample references 
-  AIscreenR::sample_references(n = 50) 
+  dplyr::filter(!is.na(abstract)) |>                     # Remove references with no abstract
+  AIscreenR::sample_references(n = 50)                   # Sample references
 
 # Construct test dataset
 test_dat <- 
@@ -77,6 +67,7 @@ test_dat <-
 View(test_dat)
 
 # Write prompt(s)
+# Can also done in Word, see vignette
 
 prompt <- "We are screening studies for a systematic literature review. 
 The topic of the systematic review is the effect of the FRIENDS preventive programme
@@ -117,7 +108,7 @@ result_obj <-
   AIscreenR::tabscreen_gpt(
     data = test_dat,                       # The data
     prompt = prompt,                       # The prompt(s) - can take multiple inputs
-    studyid = studyid,                     # Variable name containing the study IDs
+    studyid = eppi_id,                     # Variable name containing the study IDs
     title = title,                         # Variable name containing the titles
     abstract = abstract,                   # Variable name containing abstracts
     model = "gpt-4o-mini",                 # Model - can take multiple inputs
@@ -132,6 +123,8 @@ plan(sequential)
 result_obj$answer_data |> View()
 
 #saveRDS(result_obj, file = "res_obj_4o-mini.rds")
+#result_obj2 <- readRDS("res_obj_4o-mini.rds")
+
 
 # Analyze performance
 performance <- 
@@ -170,7 +163,7 @@ result_obj_reps10
 plan(sequential)
 
 #saveRDS(result_obj_reps10, file = "res_obj_4o-mini_reps10.rds")
-result_obj_reps10 <- readRDS("res_obj_4o-mini_reps10.rds")
+#result_obj_reps10 <- readRDS("res_obj_4o-mini_reps10.rds")
 
 performance10 <- 
   result_obj_reps10 |> screen_analyzer()
