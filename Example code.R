@@ -98,7 +98,7 @@ a treatment and a comparison group. For each study, I would like you to assess:
 #-------------------------------------------------------------------------------
 
 # Get from https://platform.openai.com/settings/organization/api-keys 
-set_api_key()
+#set_api_key()
 
 # To permanently added to you R environment use
 # See https://mikkelvembye.github.io/AIscreenR/articles/Using-GPT-API-Models-For-Screening.html#permanent-solution for how to do so
@@ -148,7 +148,7 @@ result_obj$answer_data |> View()
 
 #saveRDS(result_obj, file = "res_obj_4o-mini.rds")
 # Worst case
-#result_obj2 <- readRDS("res_obj_4o-mini.rds")
+#result_obj <- readRDS("res_obj_4o-mini.rds")
 
 #-------------------------------------------------------------------------------
 # Analyze screening performance
@@ -163,7 +163,7 @@ performance <-
 performance 
 
 #-------------------------------------------------------------------------------
-# Using multiple screening
+# Using multiple screening - this will a take a couple of minutes
 #-------------------------------------------------------------------------------
 
 plan(multisession)
@@ -217,7 +217,7 @@ dis_res <-
     title = title,
     abstract = abstract,
     model = "gpt-4o-mini",
-    decision_description = TRUE, # Set true to get detailed responses
+    decision_description = TRUE, # Set TRUE to get detailed responses
     reps = 10, 
     rpm = rate_limit$requests_per_minute
   )
