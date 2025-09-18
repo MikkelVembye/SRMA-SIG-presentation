@@ -139,10 +139,9 @@ result_obj <-
     rpm = rate_limit$requests_per_minute   # Requests per minute
   )
 
-# Back the sequential plan
+# Back to sequential plan
 plan(sequential)
 
-result_obj
 
 result_obj$answer_data |> View()
 
@@ -185,7 +184,7 @@ plan(sequential)
 #saveRDS(result_obj_reps10, file = "res_obj_4o-mini_reps10.rds")
 # I have cheated from home
 result_obj_reps10 <- readRDS("res_obj_4o-mini_reps10.rds")
-result_obj_reps10
+result_obj_reps10$answer_data_aggregated |> View()
 
 
 performance10 <- 
@@ -227,7 +226,7 @@ plan(sequential)
 
 #saveRDS(dis_res, file = "disagreement_description_res_obj_4o-mini_10reps.rds")
 # Worst case
-#dis_res <- readRDS("disagreement_description_res_obj_4o-mini_10reps.rds")
+dis_res <- readRDS("disagreement_description_res_obj_4o-mini_10reps.rds")
 
 dis_res$answer_data_aggregated |> 
   select(author, abstract, final_decision_gpt, longest_answer) |> 
